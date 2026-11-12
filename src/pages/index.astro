@@ -29,7 +29,7 @@ if (!home) throw new Error('Missing pages/home.md');
     align-content: center;
     gap: clamp(8px, 5svh, 44px);
     height: 100svh;
-    padding: clamp(8px, 5svh, 45px) 18px;
+    padding: var(--site-header-height) 18px clamp(8px, 5svh, 45px);
     text-align: center;
   }
 
