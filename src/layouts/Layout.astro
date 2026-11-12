@@ -45,7 +45,7 @@ const menuItems = ['research', 'publications', 'notes', 'about'].map(id => ({
   <link rel="icon" href={`${base}/favicon.ico`} sizes="32x32" />
   <link rel="icon" type="image/svg+xml" href={`${base}/favicon.svg`} sizes="any" />
   <link rel="apple-touch-icon" href={`${base}/apple-touch-icon.png`} sizes="180x180" />
-  <title>{home ? homeEntry.data.title : `${title || sectionTitle(section)} — ${homeEntry.data.title}`}</title>
+  <title>{home ? `${homeEntry.data.menuTitle} - ${homeEntry.data.title}` : `${title || sectionTitle(section)} — ${homeEntry.data.title}`}</title>
   <meta name="description" content={social.subtitle || 'Research and notes by Enrico Lepre.'} />
   <link rel="canonical" href={social.url} />
   <meta property="og:type" content={level === 3 ? 'article' : 'website'} />

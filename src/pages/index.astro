@@ -8,7 +8,10 @@ if (!home) throw new Error('Missing pages/home.md');
 ---
 <Layout level={home.data.level}>
   <main class="home">
-    <h1>{home.data.title}</h1>
+    <div class="home-heading">
+      <p class="home-name">{home.data.menuTitle}</p>
+      <h1>{home.data.title}</h1>
+    </div>
     <OptimizedImage class="landscape" src={home.data.image} alt={home.data.imageAlt} fetchpriority="high" loading="eager" />
   </main>
 </Layout>
@@ -23,14 +26,23 @@ if (!home) throw new Error('Missing pages/home.md');
   }
 
   .home {
-    display: grid;
-    grid-template-rows: auto minmax(0, 1fr);
-    justify-items: center;
-    align-content: center;
-    gap: clamp(8px, 5svh, 44px);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: clamp(10px, 2.5svh, 24px);
     height: 100svh;
-    padding: var(--site-header-height) 18px clamp(8px, 5svh, 45px);
+    padding: clamp(16px, 8svh, 64px) 18px;
     text-align: center;
+  }
+
+  .home-heading {
+    flex: none;
+  }
+
+  .home-name {
+    margin: 0 0 clamp(6px, 1.5svh, 14px);
+    font-size: clamp(16px, 2.4vw, 25px);
   }
 
   h1 {
@@ -43,10 +55,10 @@ if (!home) throw new Error('Missing pages/home.md');
   }
 
   .landscape {
-    align-self: center;
+    min-height: 0;
     width: min(560px, 100%);
     height: auto;
-    max-height: min(100%, 48svh);
+    max-height: 48svh;
     margin: 0;
     object-fit: contain;
   }
