@@ -22,8 +22,8 @@
   color-scheme:dark;
 }
 *{box-sizing:border-box}
-/* Keep centered controls stationary when navigating between short and long pages. */
-html{scroll-behavior:smooth;scrollbar-gutter:stable}
+/* Reserve equal gutters so short and long pages share the viewport center. */
+html{scroll-behavior:smooth;scrollbar-gutter:stable both-edges}
 body{
   margin:0;
   min-height:100svh;
