@@ -1,8 +1,53 @@
 ---
 import { getEntry } from 'astro:content';
-import OriginalHomepage from '../components/OriginalHomepage.astro';
-import AnimatedHomepage from '../components/AnimatedHomepage.astro';
+import Layout from '../layouts/Layout.astro';
+import OptimizedImage from '../components/OptimizedImage.astro';
+
 const home = await getEntry('pages', 'home');
 if (!home) throw new Error('Missing pages/home.md');
 ---
-{home.data.homepageAnimation ? <AnimatedHomepage /> : <OriginalHomepage />}
+<Layout level={home.data.level}>
+  <main class="home">
+    <h1>{home.data.title}</h1>
+    <OptimizedImage class="landscape" src={home.data.image} alt={home.data.imageAlt} fetchpriority="high" loading="eager" />
+  </main>
+</Layout>
+
+<style>
+  :global(html:has(body[data-page="home"])) {
+    scrollbar-gutter: auto;
+  }
+
+  :global(body[data-page="home"]) {
+    padding: 0;
+  }
+
+  .home {
+    display: grid;
+    grid-template-rows: auto minmax(0, 1fr);
+    justify-items: center;
+    align-content: center;
+    gap: clamp(8px, 5svh, 44px);
+    height: 100svh;
+    padding: clamp(8px, 5svh, 45px) 18px;
+    text-align: center;
+  }
+
+  h1 {
+    max-width: 860px;
+    margin: 0;
+    font-size: min(clamp(32px, 9vw, 104px), 22svh);
+    font-weight: 400;
+    line-height: .95;
+    letter-spacing: -.055em;
+  }
+
+  .landscape {
+    align-self: center;
+    width: min(560px, 100%);
+    height: auto;
+    max-height: min(100%, 48svh);
+    margin: 0;
+    object-fit: contain;
+  }
+</style>

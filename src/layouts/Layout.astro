@@ -36,7 +36,7 @@ const menuItems = ['research', 'publications', 'notes', 'about'].map(id => ({
 <!doctype html>
 <html lang="en">
 <head>
-  <ClientRouter />
+  {!home && <ClientRouter />}
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <meta name="color-scheme" content="light dark" />
@@ -66,7 +66,7 @@ const menuItems = ['research', 'publications', 'notes', 'about'].map(id => ({
 </head>
 <body id="top" data-page={section} data-page-level={level} data-reading={String(reading)}>
   <LandscapeFilter />
-  <header class="site-header shell" transition:name="site-menu" transition:animate="none">
+  {!home && <header class="site-header shell" transition:name="site-menu" transition:animate="none">
     <div class="menu">
       <button class="menu-toggle" aria-expanded="false" aria-controls="main-menu" aria-label="Open navigation"><span aria-hidden="true"></span></button>
       <nav id="main-menu" aria-label="Main navigation" inert>
@@ -86,9 +86,9 @@ const menuItems = ['research', 'publications', 'notes', 'about'].map(id => ({
         </button>
       </nav>
     </div>
-  </header>
-  <div class="page-stage" transition:name="page-content" transition:animate={pageTransition}><slot /></div>
-  <footer class="site-footer" transition:name="site-footer" transition:animate="none">{homeEntry.data.footer}</footer>
-  <script>import '../scripts/navigation.js'; import '../scripts/external-links.js';</script>
+  </header>}
+  {home ? <slot /> : <div class="page-stage" transition:name="page-content" transition:animate={pageTransition}><slot /></div>}
+  {!home && <footer class="site-footer" transition:name="site-footer" transition:animate="none">{homeEntry.data.footer}</footer>}
+  {!home && <script>import '../scripts/navigation.js'; import '../scripts/external-links.js';</script>}
 </body>
 </html>

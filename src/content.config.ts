@@ -7,12 +7,7 @@ const dated = (name: string) => defineCollection({
 export const collections = {
   pages: defineCollection({
     loader: glob({ pattern: ['*.md', '!template.md'], base: './src/content/pages' }),
-    schema: z.object({ title: z.string(), subtitle: z.string().optional(), level: z.number().int().positive(), reading: z.boolean().default(false), homepageAnimation: z.boolean().default(true), menuTitle: z.string().default('Enrico Lepre'), image: z.string(), imageAlt: z.string(), footer: z.string(), career: z.array(z.object({ city:z.string(), longitude:z.number().min(-180).max(180), latitude:z.number().min(-85).max(85), title:z.string(), topic:z.string() })).length(4).default([
-      {city:'Trieste',longitude:13.7768,latitude:45.6495,title:'Bachelor’s and Master’s',topic:'Chemistry'},
-      {city:'Potsdam',longitude:13.0645,latitude:52.3906,title:'PhD',topic:'Materials Science'},
-      {city:'Heidelberg',longitude:8.6724,latitude:49.3988,title:'Postdoc',topic:'Sustainable Chemical Processes'},
-      {city:'Zurich',longitude:8.5417,latitude:47.3769,title:'Postdoc',topic:'Physical Chemistry'}
-    ]) })
+    schema: z.object({ title: z.string(), subtitle: z.string().optional(), level: z.number().int().positive(), reading: z.boolean().default(false), menuTitle: z.string().default('Enrico Lepre'), image: z.string(), imageAlt: z.string(), footer: z.string() })
   }),
   research: dated('research'), notes: dated('notes'),
   sections: defineCollection({

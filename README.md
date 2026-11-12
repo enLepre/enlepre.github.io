@@ -2,11 +2,9 @@
 
 Static Astro website, published at https://enlepre.github.io/.
 
-## Homepage animation and restoration
+## Homepage
 
-The homepage scrolls through the landscape, a pinned title, and sequential links to Research, Publications, Notes and About. Their subtitles come from the existing section Markdown. Hovering or focusing a section title rotates its rhombus and expands an outline around the title. Reduced-motion preferences and short screens use a normal flowing layout.
-
-The original homepage is preserved unchanged in `src/components/OriginalHomepage.astro`. To restore it, set `homepageAnimation: false` in `src/content/pages/home.md`; set it to `true` to re-enable the animation. Both use the same original homepage content and image.
+The homepage shows the title and landscape from `src/content/pages/home.md` on a single screen. The [animated homepage archive](https://github.com/enLepre/IdeasToStore) includes the career map, scroll effects, assets and tests.
 
 ## Development commands
 
@@ -15,14 +13,14 @@ Run `pnpm test` and `pnpm run build` before publishing. `pnpm run preview` previ
 
 ## Edit content
 
-- `src/content/pages/home.md`: Home title, separate `menuTitle`, image, footer, optional Markdown body, and hierarchy.
+- `src/content/pages/home.md`: Home title, separate `menuTitle`, image, footer, and hierarchy.
 - `src/content/research/*.md`: research entries.
 - `src/content/notes/*.md`: all notes and longer pieces, with optional `status`.
 - `src/content/sections/*.md`: section titles and introductions; `about.md` also contains the biography and contact text.
 
-Every page Markdown file requires a positive integer `level` in its YAML frontmatter. Use `level: 1` for Home, `level: 2` for sections, and `level: 3` for articles. A larger destination level slides upward; a smaller destination level slides downward, even when going directly from an article to Home or using browser history. Equal levels retain the router’s normal direction. Change these numbers to customize hierarchy; URLs do not determine the animation.
+Every page Markdown file requires a positive integer `level` in its YAML frontmatter. Use `level: 1` for Home, `level: 2` for sections, and `level: 3` for articles. A larger destination level slides upward; a smaller destination level slides downward, including when using browser history between section and article pages. Equal levels retain the router’s normal direction. Change these numbers to customize hierarchy; URLs do not determine the animation.
 
-Each page also supports `reading: true` or `reading: false`. All current level 3 articles use `reading: true`; Home and sections use `false`. This setting is independent of `level`, so you can change either later. On all pages, the rhombus and footer appear at the top, fade away after scrolling more than 48 pixels, and reappear when you return to the top area. Hidden controls cannot receive clicks or keyboard focus. A page opened or restored partway down starts with the controls hidden.
+Each page also supports `reading: true` or `reading: false`. All current level 3 articles use `reading: true`; Home and sections use `false`. This setting is independent of `level`, so you can change either later. On section and article pages, the rhombus and footer appear at the top, fade away after scrolling more than 48 pixels, and reappear when you return to the top area. Hidden controls cannot receive clicks or keyboard focus. A page opened or restored partway down starts with the controls hidden.
 
 Use standard YAML `level: 3` (one colon), not `level:: 3`.
 
@@ -46,7 +44,7 @@ Section files supply each section’s title, optional `lead`, and hierarchy. Wri
 
 The existing placeholders all use 2026-10-05, the day they were first committed; they are not new publications. Replace these dates when publishing real content. About uses level-two headings to separate its blocks.
 
-The homepage shows only the name and landscape. A top-left rhombus rotates into a square on hover or focus; clicking or activating it expands the square into the navigation panel. Navigation uses the Markdown `level` values: increasing slides upward, decreasing slides downward (Home → section → article). Same-level navigation follows the router’s normal direction, including browser Back/Forward. The footer stays stationary. Reduced-motion preferences disable the page animation. The original `.html` section and article URLs are preserved. Shared styling lives in `src/styles/global.css`.
+On section and article pages, a top-left rhombus rotates into a square on hover or focus; clicking or activating it expands the square into the navigation panel. Navigation uses the Markdown `level` values: increasing slides upward, decreasing slides downward (section → article). Same-level navigation follows the router’s normal direction, including browser Back/Forward. The footer stays stationary. Reduced-motion preferences disable the page animation. The original `.html` section and article URLs are preserved. Shared styling lives in `src/styles/global.css`.
 
 ## Automatic publications
 
@@ -66,35 +64,6 @@ For notes and research, the existing `preview` text supplies the subtitle. Secti
 
 The shared layout adds Open Graph and Twitter/X metadata with absolute image and canonical URLs, including the GitHub Pages base path. Updating the wording changes the generated image URL. Sharing platforms control their surrounding card layout, cropping, and caching, so an existing shared link may take time to refresh.
 
-## Homepage journey
-
-The animated homepage draws the Europe map from north to south, reveals the
-career route, erases the map, and continuously opens the curved route into the
-four section links. The title keeps the website's existing Georgia typography.
-After the scroll tour, all titles remain visible but no description or enlarged
-marker remains selected. Hover or keyboard focus expands that section's diamond
-clockwise into an empty square and shows its description; leaving clears it again.
-
-Edit the four `career` entries in `src/content/pages/home.md` to change the cities,
-coordinates, qualifications and topics. Navigation titles and descriptions come
-from `src/content/sections/{research,publications,notes,about}.md`: `title` and
-`lead` (or `preview` when `lead` is empty). Descriptions use a centered, justified
-800px reading column. They are not duplicated in the animation code.
-
-Phone and short viewports keep the full scroll animation, with wrapped map labels,
-a vertical navigation line and full-size titles to its right. The map route opens
-smoothly into this rail, and the diamond highlight travels from top to bottom.
-Each mobile description appears directly below its title and remains visible
-after that section's reveal. The rail grows to fit the text, and the menu moves
-up as scrolling reaches the later sections; paragraphs are not replaced or faded
-out. Desktop retains the single changing description below its horizontal line.
-Phones use a shorter scroll distance and descriptions sized to the
-available space. Section links open with a normal tap; scrolling previews their
-descriptions. Only reduced-motion settings use a static, accessible menu with
-the same links and hover/focus descriptions. The original homepage
-remains available through `homepageAnimation: false`. The map data is local and
-requires no new runtime dependency or external map service.
-
 ## Publish
 
 Every push to `main` runs `.github/workflows/pages.yml`: install from the lockfile, test, build Astro, upload only `dist`, deploy to GitHub Pages. A manual workflow run is also supported. The existing branch-based Pages configuration is supported: the Astro deployment waits for any legacy build of the same commit to finish before publishing, preventing it from overwriting the built site. Switching Pages to **GitHub Actions** removes that redundant legacy build.
@@ -103,7 +72,7 @@ Every push to `main` runs `.github/workflows/pages.yml`: install from the lockfi
 
 Every Markdown entry in Research and Notes generates its own URL:
 `/<collection>/<filename-without-md>.html`.
-Click its title from the homepage or section page to read it separately.
+Click its title from the section page to read it separately.
 The section Markdown files have their existing `research.html`, `notes.html`,
 and `about.html` pages. The navigation links to them. The former Essays section
 and its articles redirect to Notes and the corresponding Note articles, preserving existing links.
@@ -121,4 +90,4 @@ The About page uses `portrait` and `portraitAlt` in `src/content/sections/about.
 
 The home image uses `public/assets/landscape-highres.png` (1575 × 999), enhanced with the built-in image tool from the original 560 × 355 drawing. Prompt: improve resolution and clarity while preserving the mountain silhouettes, river, sparse pen strokes, white background, composition, and handwritten “Same questions, a wider landscape.” note.
 
-The animated homepage and About portrait use `OptimizedImage.astro` to generate responsive WebP images during the build, using Sharp. The original assets and Markdown paths remain editable; browsers choose an image size appropriate for the screen. The homepage animation measures layout on initialization and resize instead of every scroll frame. Menu/footer visibility updates only when crossing the 48-pixel scroll threshold.
+The homepage landscape and About portrait use `OptimizedImage.astro` to generate responsive WebP images during the build, using Sharp. The original assets and Markdown paths remain editable; browsers choose an image size appropriate for the screen. Menu/footer visibility updates only when crossing the 48-pixel scroll threshold.
