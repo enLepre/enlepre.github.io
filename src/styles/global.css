@@ -189,15 +189,52 @@ nav a{display:block}
 body { padding-top: var(--site-header-height); }
 html { scroll-behavior: auto; }
 .site-header { position: fixed; top: 0; left: 50%; transform: translateX(-50%); z-index: 500; padding: 24px 0; pointer-events: none; }
-/* One outlined diamond becomes a square, then grows into the menu surface. */
-.menu { --menu-height: min(372px, calc(100svh - 44px)); position: relative; width: 44px; height: 44px; pointer-events: auto; }
-.menu::before { content: ''; position: absolute; top: 10px; left: 10px; width: 14.4px; height: 14.4px; border: 1px solid var(--ink); background: var(--paper); transform: rotate(45deg); transform-origin: 7.2px 7.2px; transition: transform .25s ease, width .4s cubic-bezier(.22,.61,.36,1), height .4s cubic-bezier(.22,.61,.36,1); pointer-events: none; }
-.menu:has(.menu-toggle:hover)::before, .menu:focus-within::before, .menu.is-open::before { transform: rotate(0); }
-.menu.is-open::before { width: min(312px, calc(100vw - 42px)); height: var(--menu-height); }
-.menu-toggle { position: relative; z-index: 2; display: block; width: 44px; height: 44px; border: 0; padding: 10px; background: transparent; color: var(--ink); cursor: pointer; }
+/* Keep the panel at its final size and animate only its painted scale. */
+.menu {
+  --menu-width: min(312px, calc(100vw - 42px));
+  --menu-height: min(372px, calc(100svh - 44px));
+  position: relative;
+  width: 44px;
+  height: 44px;
+  pointer-events: auto;
+}
+.menu::before,
+.menu::after {
+  content: '';
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  border: 1px solid var(--ink);
+  background: var(--paper);
+  pointer-events: none;
+}
+.menu::before {
+  width: 14.4px;
+  height: 14.4px;
+  transform: rotate(45deg);
+  transform-origin: 7.2px 7.2px;
+  transition: transform .2s ease, opacity .14s ease;
+}
+.menu:has(.menu-toggle:focus-visible)::before,
+.menu.is-open::before { transform: rotate(0); }
+@media (hover: hover) and (pointer: fine) {
+  .menu:has(.menu-toggle:hover)::before { transform: rotate(0); }
+}
+.menu.is-open::before { opacity: 0; }
+.menu::after {
+  box-sizing: border-box;
+  width: var(--menu-width);
+  height: var(--menu-height);
+  transform-origin: top left;
+  transform: scale(.05, .04);
+  opacity: 0;
+  transition: transform .3s cubic-bezier(.22,.61,.36,1), opacity .16s ease;
+}
+.menu.is-open::after { transform: scale(1, 1); opacity: 1; }
+.menu-toggle { position: relative; z-index: 2; display: block; width: 44px; height: 44px; border: 0; padding: 10px; background: transparent; color: var(--ink); cursor: pointer; touch-action: manipulation; }
 .menu-toggle span { display: none; }
-.menu nav { position: absolute; top: 10px; left: 10px; display: flex; flex-direction: column; justify-content: safe center; overflow-y: auto; gap: 0; width: min(312px, calc(100vw - 42px)); height: var(--menu-height); padding: 24px; visibility: hidden; opacity: 0; transform: translateY(-6px); transition: opacity .15s ease, transform .15s ease, visibility .15s; }
-.menu.is-open nav { visibility: visible; opacity: 1; transform: translateY(0); transition: opacity .2s ease .22s, transform .2s ease .22s, visibility 0s; }
+.menu nav { position: absolute; z-index: 1; top: 10px; left: 10px; display: flex; flex-direction: column; justify-content: safe center; overflow-y: auto; gap: 0; width: var(--menu-width); height: var(--menu-height); padding: 24px; visibility: hidden; opacity: 0; transform: translateY(-4px); transition: opacity .12s ease, transform .12s ease, visibility 0s .12s; }
+.menu.is-open nav { visibility: visible; opacity: 1; transform: translateY(0); transition: opacity .18s ease .10s, transform .18s ease .10s, visibility 0s; }
 .menu nav a { padding: 10px 0; font-size: 17px; }
 .menu nav .brand { font-size: 23px; padding-bottom: 20px; margin-bottom: 8px; border-bottom: 1px solid var(--hairline); }
 .menu nav a.is-active { font-style: italic; }
@@ -243,7 +280,7 @@ html { scroll-behavior: auto; }
 @media (prefers-reduced-motion: reduce) {
   :root[data-astro-transition]::view-transition-old(root),
   :root[data-astro-transition]::view-transition-new(root) { animation: none !important; }
-  .menu::before, .menu nav, .menu-toggle span { transition: none; }
+  .menu::before, .menu::after, .menu nav { transition: none; }
 }
 
 .section-intro { margin-bottom: 36px; }
