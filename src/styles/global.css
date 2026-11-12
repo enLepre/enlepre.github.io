@@ -189,7 +189,7 @@ nav a{display:block}
 body { padding-top: var(--site-header-height); }
 html { scroll-behavior: auto; }
 .site-header { position: fixed; top: 0; left: 50%; transform: translateX(-50%); z-index: 500; padding: 24px 0; pointer-events: none; }
-/* Keep the panel at its final size and animate only its painted scale. */
+/* The same outline scales to a square and then rotates into the resting rhombus. */
 .menu {
   --menu-width: min(312px, calc(100vw - 42px));
   --menu-height: min(372px, calc(100svh - 44px));
@@ -198,43 +198,37 @@ html { scroll-behavior: auto; }
   height: 44px;
   pointer-events: auto;
 }
-.menu::before,
-.menu::after {
-  content: '';
+.menu-outline {
   position: absolute;
   top: 10px;
   left: 10px;
-  border: 1px solid var(--ink);
-  background: var(--paper);
-  pointer-events: none;
-}
-.menu::before {
-  width: 14.4px;
-  height: 14.4px;
-  transform: rotate(45deg);
-  transform-origin: 7.2px 7.2px;
-  transition: transform .2s ease, opacity .14s ease;
-}
-.menu:has(.menu-toggle:focus-visible)::before,
-.menu.is-open::before { transform: rotate(0); }
-@media (hover: hover) and (pointer: fine) {
-  .menu:has(.menu-toggle:hover)::before { transform: rotate(0); }
-}
-.menu.is-open::before { opacity: 0; }
-.menu::after {
-  box-sizing: border-box;
   width: var(--menu-width);
   height: var(--menu-height);
-  transform-origin: top left;
-  transform: scale(.05, .04);
-  opacity: 0;
-  transition: transform .3s cubic-bezier(.22,.61,.36,1), opacity .16s ease;
+  overflow: visible;
+  pointer-events: none;
+  transform-origin: 7.2px 7.2px;
+  transform: rotate(45deg);
+  transition: transform .16s ease .35s;
 }
-.menu.is-open::after { transform: scale(1, 1); opacity: 1; }
+.menu-outline rect {
+  fill: var(--paper);
+  stroke: var(--ink);
+  transform: scale(.046, .039);
+  transition: transform .34s cubic-bezier(.42,0,.38,1) .06s;
+}
+.menu:has(.menu-toggle:focus-visible) .menu-outline,
+.menu.is-open .menu-outline { transform: rotate(0); transition-delay: 0s; }
+@media (hover: hover) and (pointer: fine) {
+  .menu:has(.menu-toggle:hover) .menu-outline { transform: rotate(0); transition-delay: 0s; }
+}
+.menu.is-open .menu-outline rect {
+  transform: scale(1, 1);
+  transition: transform .34s cubic-bezier(.42,0,.26,1) .09s;
+}
 .menu-toggle { position: relative; z-index: 2; display: block; width: 44px; height: 44px; border: 0; padding: 10px; background: transparent; color: var(--ink); cursor: pointer; touch-action: manipulation; }
 .menu-toggle span { display: none; }
-.menu nav { position: absolute; z-index: 1; top: 10px; left: 10px; display: flex; flex-direction: column; justify-content: safe center; overflow-y: auto; gap: 0; width: var(--menu-width); height: var(--menu-height); padding: 24px; visibility: hidden; opacity: 0; transform: translateY(-4px); transition: opacity .12s ease, transform .12s ease, visibility 0s .12s; }
-.menu.is-open nav { visibility: visible; opacity: 1; transform: translateY(0); transition: opacity .18s ease .10s, transform .18s ease .10s, visibility 0s; }
+.menu nav { position: absolute; z-index: 1; top: 10px; left: 10px; display: flex; flex-direction: column; justify-content: safe center; overflow-y: auto; gap: 0; width: var(--menu-width); height: var(--menu-height); padding: 24px; visibility: hidden; opacity: 0; transform: translateY(-4px); transition: opacity .16s ease, transform .16s ease, visibility 0s .16s; }
+.menu.is-open nav { visibility: visible; opacity: 1; transform: translateY(0); transition: opacity .2s ease .23s, transform .2s ease .23s, visibility 0s; }
 .menu nav a { padding: 10px 0; font-size: 17px; }
 .menu nav .brand { font-size: 23px; padding-bottom: 20px; margin-bottom: 8px; border-bottom: 1px solid var(--hairline); }
 .menu nav a.is-active { font-style: italic; }
@@ -280,7 +274,8 @@ html { scroll-behavior: auto; }
 @media (prefers-reduced-motion: reduce) {
   :root[data-astro-transition]::view-transition-old(root),
   :root[data-astro-transition]::view-transition-new(root) { animation: none !important; }
-  .menu::before, .menu::after, .menu nav { transition: none; }
+  .menu-outline, .menu-outline rect, .menu.is-open .menu-outline rect,
+  .menu nav, .menu.is-open nav { transition: none; }
 }
 
 .section-intro { margin-bottom: 36px; }

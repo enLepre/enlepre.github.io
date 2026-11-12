@@ -64,6 +64,9 @@ const menuItems = ['research', 'publications', 'notes', 'tools', 'about'].map(id
   <LandscapeFilter />
   <header class="site-header shell" transition:name="site-menu" transition:animate="none">
     <div class="menu">
+      <svg class="menu-outline" aria-hidden="true" focusable="false">
+        <rect width="100%" height="100%" vector-effect="non-scaling-stroke" />
+      </svg>
       <button class="menu-toggle" aria-expanded="false" aria-controls="main-menu" aria-label="Open navigation"><span aria-hidden="true"></span></button>
       <nav id="main-menu" aria-label="Main navigation" inert>
         <a class="brand" href={`${base}/`} data-nav="home">{homeEntry.data.menuTitle}</a>
