@@ -51,19 +51,6 @@ document.addEventListener('astro:page-load', () => {
 initializeMenu();
 initializeScrollControls();
 
-// Read the destination's rendered Markdown level after its document is loaded.
-document.addEventListener('astro:before-preparation', (event) => {
-  const load = event.loader;
-  event.loader = async () => {
-    await load();
-    const current = Number(document.body.dataset.pageLevel);
-    const next = Number(event.newDocument?.body.dataset.pageLevel);
-    if (!Number.isFinite(current) || !Number.isFinite(next)) return;
-    if (next < current) event.direction = 'back';
-    else if (next > current) event.direction = 'forward';
-  };
-});
-
 function initializeScrollControls() {
   const body = document.body;
   if (!body || body.dataset.scrollControlsReady) return;

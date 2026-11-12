@@ -223,10 +223,13 @@ html { scroll-behavior: auto; }
 .hero .landscape { width: min(560px, 100%); max-height: 48svh; object-fit: contain; margin-top: 44px; }
 .page-stage { display: flow-root; min-height: calc(100svh - var(--site-header-height) - 58px); background: var(--paper); }
 .site-footer { z-index: 600; background: var(--paper); }
-@keyframes page-up-out { from { transform: translateY(0); } to { transform: translateY(-100vh); } }
-@keyframes page-up-in { from { transform: translateY(100vh); } to { transform: translateY(0); } }
-@keyframes page-down-out { from { transform: translateY(0); } to { transform: translateY(100vh); } }
-@keyframes page-down-in { from { transform: translateY(-100vh); } to { transform: translateY(0); } }
+@keyframes page-fade-out { from { opacity: 1; } to { opacity: 0; } }
+@keyframes page-fade-in { from { opacity: 0; } to { opacity: 1; } }
+/* Native snapshots run together. Hold the incoming snapshot until the outgoing fade is complete. */
+:root[data-astro-transition]::view-transition { background: var(--paper); }
+:root[data-astro-transition]::view-transition-old(root),
+:root[data-astro-transition]::view-transition-new(root) { mix-blend-mode: normal; }
+:root[data-astro-transition]::view-transition-new(root) { animation-delay: 320ms; }
 ::view-transition-group(site-footer), ::view-transition-group(site-menu) { z-index: 10; }
 ::view-transition-old(site-footer), ::view-transition-old(site-menu) { display: none; }
 ::view-transition-new(site-footer), ::view-transition-new(site-menu) { animation: none; }
@@ -238,18 +241,12 @@ html { scroll-behavior: auto; }
   .hero .landscape { margin-top: 34px; }
 }
 @media (prefers-reduced-motion: reduce) {
-  ::view-transition-old(page-content), ::view-transition-new(page-content) { animation: none !important; }
+  :root[data-astro-transition]::view-transition-old(root),
+  :root[data-astro-transition]::view-transition-new(root) { animation: none !important; }
   .menu::before, .menu nav, .menu-toggle span { transition: none; }
 }
 
-/* Explicit direction also governs the native transition snapshots. */
-[data-astro-transition="back"]::view-transition-old(page-content) { animation-name: page-down-out !important; }
-[data-astro-transition="back"]::view-transition-new(page-content) { animation-name: page-down-in !important; }
 .section-intro { margin-bottom: 36px; }
-@media (prefers-reduced-motion: reduce) {
-  [data-astro-transition="back"]::view-transition-old(page-content),
-  [data-astro-transition="back"]::view-transition-new(page-content) { animation: none !important; }
-}
 
 /* Reading pages clear the viewport once the reader leaves the top. */
 body .site-header,

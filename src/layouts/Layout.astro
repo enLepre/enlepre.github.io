@@ -5,15 +5,11 @@ import LandscapeFilter from '../components/LandscapeFilter.astro';
 import { getEntry, getCollection } from 'astro:content';
 import { ClientRouter } from 'astro:transitions';
 import { previewMetadata, aboutPreview } from '../lib/social-preview.mjs';
-const movement = {
-  old: { name: 'page-up-out', duration: '650ms', easing: 'cubic-bezier(.65,0,.25,1)', fillMode: 'both' },
-  new: { name: 'page-up-in', duration: '650ms', easing: 'cubic-bezier(.65,0,.25,1)', fillMode: 'both' }
+const fade = {
+  old: { name: 'page-fade-out', duration: '300ms', easing: 'ease-in-out', fillMode: 'both' },
+  new: { name: 'page-fade-in', duration: '340ms', easing: 'ease-in-out', fillMode: 'both' }
 };
-const reverseMovement = {
-  old: { ...movement.old, name: 'page-down-out' },
-  new: { ...movement.new, name: 'page-down-in' }
-};
-const pageTransition = { forwards: movement, backwards: reverseMovement };
+const pageTransition = { forwards: fade, backwards: fade };
 const { section = 'home', title, subtitle, level, reading = false } = Astro.props;
 const homeEntry = await getEntry('pages', 'home');
 if (!homeEntry) throw new Error('Missing pages/home.md');
@@ -34,7 +30,7 @@ const menuItems = ['research', 'publications', 'notes', 'tools', 'about'].map(id
 }));
 ---
 <!doctype html>
-<html lang="en">
+<html lang="en" transition:name="root" transition:animate={pageTransition}>
 <head>
   <ClientRouter />
   <meta charset="utf-8" />
@@ -87,7 +83,7 @@ const menuItems = ['research', 'publications', 'notes', 'tools', 'about'].map(id
       </nav>
     </div>
   </header>
-  <div class="page-stage" transition:name="page-content" transition:animate={pageTransition}><slot /></div>
+  <div class="page-stage"><slot /></div>
   {!home && <footer class="site-footer" transition:name="site-footer" transition:animate="none">{homeEntry.data.footer}</footer>}
   <script>import '../scripts/navigation.js'; import '../scripts/external-links.js';</script>
 </body>

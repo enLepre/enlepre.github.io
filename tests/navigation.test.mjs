@@ -53,35 +53,6 @@ test('menu opens only on activation and supports dismissal and client navigation
   assert.equal(nav.inert, false);
 });
 
-test('transition compares loaded Markdown levels, including direct article-to-home links', async () => {
-  const events = {};
-  const document = { body: { dataset: {} }, querySelector: () => null, addEventListener(name, handler) { events[name] = handler; } };
-  vm.runInNewContext(readFileSync('src/scripts/navigation.js', 'utf8'), { document, AbortController });
-  const direction = async (current, next, initial = 'forward') => {
-    document.body.dataset.pageLevel = String(current);
-    let loaded = false;
-    const event = { direction: initial, newDocument: document, loader: async () => {
-      loaded = true;
-      event.newDocument = { body: { dataset: { pageLevel: String(next) } } };
-    } };
-    events['astro:before-preparation'](event);
-    await event.loader();
-    assert.equal(loaded, true);
-    return event.direction;
-  };
-  assert.equal(await direction(1, 2), 'forward');
-  assert.equal(await direction(2, 3), 'forward');
-  assert.equal(await direction(3, 2), 'back');
-  assert.equal(await direction(2, 1), 'back');
-  assert.equal(await direction(3, 1), 'back');
-  // Edited levels override route structure and browser-history direction.
-  assert.equal(await direction(5, 1), 'back');
-  assert.equal(await direction(1, 7, 'back'), 'forward');
-  assert.equal(await direction(2, 2), 'forward');
-  assert.equal(await direction(2, 2, 'back'), 'back');
-  assert.equal(await direction(3, undefined, 'back'), 'back');
-});
-
 test('all page controls hide on scroll, return at the top, and reset after navigation', () => {
   const events = {}, scrollListeners = [];
   const makeBody = reading => {

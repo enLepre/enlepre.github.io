@@ -19,7 +19,7 @@ Run `pnpm test` and `pnpm run build` before publishing. `pnpm run preview` previ
 - `src/content/tools/*.md`: tool descriptions and links.
 - `src/content/sections/*.md`: section titles and introductions; `about.md` also contains the biography and contact text.
 
-Every page Markdown file requires a positive integer `level` in its YAML frontmatter. Use `level: 1` for Home, `level: 2` for sections, and `level: 3` for articles. A larger destination level slides upward; a smaller destination level slides downward, including when using browser history. Equal levels retain the router’s normal direction. Change these numbers to customize hierarchy; URLs do not determine the animation.
+Every page Markdown file requires a positive integer `level` in its YAML frontmatter. Use `level: 1` for Home, `level: 2` for sections, and `level: 3` for articles. These values describe the site hierarchy.
 
 Each page also supports `reading: true` or `reading: false`. All current level 3 articles use `reading: true`; Home and sections use `false`. This setting is independent of `level`, so you can change either later. On section and article pages, the rhombus and footer appear at the top, fade away after scrolling more than 48 pixels, and reappear when you return to the top area. Hidden controls cannot receive clicks or keyboard focus. A page opened or restored partway down starts with the controls hidden.
 
@@ -45,7 +45,7 @@ Section files supply each section’s title, optional `lead`, and hierarchy. Wri
 
 The existing placeholders all use 2026-10-05, the day they were first committed; they are not new publications. Replace these dates when publishing real content. About uses level-two headings to separate its blocks.
 
-A top-left rhombus rotates into a square on hover or focus; clicking or activating it expands the square into the navigation panel. Navigation uses the Markdown `level` values: increasing slides upward, decreasing slides downward (Home → section → article). Same-level navigation follows the router’s normal direction, including browser Back/Forward. The footer stays stationary. Reduced-motion preferences disable the page animation. The original `.html` section and article URLs are preserved. Shared styling lives in `src/styles/global.css`.
+A top-left rhombus rotates into a square on hover or focus; clicking or activating it expands the square into the navigation panel. During navigation, the outgoing page fades out before the incoming page fades in, including on browser Back/Forward. The footer stays stationary. Reduced-motion preferences disable the page animation. The original `.html` section and article URLs are preserved. Shared styling lives in `src/styles/global.css`.
 
 ## Automatic publications
 
