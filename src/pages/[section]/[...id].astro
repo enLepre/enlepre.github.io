@@ -6,11 +6,11 @@ import { articleHref } from '../../lib/urls.mjs';
 import { formatNoteDate } from '../../lib/dates.mjs';
 import { previewText } from '../../lib/social-preview.mjs';
 export async function getStaticPaths() {
-  const sections = ['research', 'notes'] as const;
+  const sections = ['research', 'notes', 'tools'] as const;
   const routes = await Promise.all(sections.map(async section =>
     (await getCollection(section)).flatMap(entry => [
       { params: { section, id: entry.id }, props: { entry, section, legacy: false } },
-      ...(entry.data.legacySlug && entry.data.legacySlug !== entry.id ? [
+      ...(entry.collection !== 'tools' && entry.data.legacySlug && entry.data.legacySlug !== entry.id ? [
         { params: { section, id: entry.data.legacySlug }, props: { entry, section, legacy: true } }
       ] : [])
     ])
@@ -22,7 +22,10 @@ if (legacy) return Astro.redirect(articleHref(section, entry.id, import.meta.env
 const { Content } = await render(entry);
 const parent = await getEntry('sections', section);
 const base = import.meta.env.BASE_URL.replace(/\/$/, '');
-const [dateStart, dateSuffix, dateEnd] = formatNoteDate(entry.data.date).split(/(st|nd|rd|th)(?=,)/);
+const noteDate = entry.collection === 'notes' ? entry.data.date : undefined;
+const [dateStart, dateSuffix, dateEnd] = noteDate
+  ? formatNoteDate(noteDate).split(/(st|nd|rd|th)(?=,)/)
+  : [];
 ---
 <Layout section={section} title={entry.data.title} subtitle={previewText(entry.data).subtitle} level={entry.data.level} reading={entry.data.reading}>
   <main class="page article-page">
@@ -30,11 +33,11 @@ const [dateStart, dateSuffix, dateEnd] = formatNoteDate(entry.data.date).split(/
     <article>
       <h1 class="page-title">{entry.data.title}</h1>
       <div class="prose"><Content /></div>
-      {entry.data.publications && <Publications />}
-      {section === 'notes' && (
+      {entry.collection !== 'tools' && entry.data.publications && <Publications />}
+      {noteDate && (
         <footer class="note-signature">
           <span>Enrico L.</span>
-          <time datetime={entry.data.date.toISOString().slice(0, 10)}>{dateStart}<sup>{dateSuffix}</sup>{dateEnd}</time>
+          <time datetime={noteDate.toISOString().slice(0, 10)}>{dateStart}<sup>{dateSuffix}</sup>{dateEnd}</time>
         </footer>
       )}
     </article>

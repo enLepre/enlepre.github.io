@@ -5,7 +5,7 @@ import SectionContent from '../components/SectionContent.astro';
 import OptimizedImage from '../components/OptimizedImage.astro';
 import { previewText } from '../lib/social-preview.mjs';
 export function getStaticPaths() {
-  return ['research', 'publications', 'notes', 'about'].map(section => ({ params: { section } }));
+  return ['research', 'publications', 'notes', 'tools', 'about'].map(section => ({ params: { section } }));
 }
 const { section } = Astro.params;
 const entry = await getEntry('sections', section!);

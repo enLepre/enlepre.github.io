@@ -190,13 +190,13 @@ body { padding-top: var(--site-header-height); }
 html { scroll-behavior: auto; }
 .site-header { position: fixed; top: 0; left: 50%; transform: translateX(-50%); z-index: 500; padding: 24px 0; pointer-events: none; }
 /* One outlined diamond becomes a square, then grows into the menu surface. */
-.menu { position: relative; width: 44px; height: 44px; pointer-events: auto; }
+.menu { --menu-height: min(372px, calc(100svh - 44px)); position: relative; width: 44px; height: 44px; pointer-events: auto; }
 .menu::before { content: ''; position: absolute; top: 10px; left: 10px; width: 14.4px; height: 14.4px; border: 1px solid var(--ink); background: var(--paper); transform: rotate(45deg); transform-origin: 7.2px 7.2px; transition: transform .25s ease, width .4s cubic-bezier(.22,.61,.36,1), height .4s cubic-bezier(.22,.61,.36,1); pointer-events: none; }
 .menu:has(.menu-toggle:hover)::before, .menu:focus-within::before, .menu.is-open::before { transform: rotate(0); }
-.menu.is-open::before { width: min(312px, calc(100vw - 42px)); height: 372px; }
+.menu.is-open::before { width: min(312px, calc(100vw - 42px)); height: var(--menu-height); }
 .menu-toggle { position: relative; z-index: 2; display: block; width: 44px; height: 44px; border: 0; padding: 10px; background: transparent; color: var(--ink); cursor: pointer; }
 .menu-toggle span { display: none; }
-.menu nav { position: absolute; top: 10px; left: 10px; display: flex; flex-direction: column; justify-content: center; gap: 0; width: min(312px, calc(100vw - 42px)); height: 372px; padding: 24px; visibility: hidden; opacity: 0; transform: translateY(-6px); transition: opacity .15s ease, transform .15s ease, visibility .15s; }
+.menu nav { position: absolute; top: 10px; left: 10px; display: flex; flex-direction: column; justify-content: safe center; overflow-y: auto; gap: 0; width: min(312px, calc(100vw - 42px)); height: var(--menu-height); padding: 24px; visibility: hidden; opacity: 0; transform: translateY(-6px); transition: opacity .15s ease, transform .15s ease, visibility .15s; }
 .menu.is-open nav { visibility: visible; opacity: 1; transform: translateY(0); transition: opacity .2s ease .22s, transform .2s ease .22s, visibility 0s; }
 .menu nav a { padding: 10px 0; font-size: 17px; }
 .menu nav .brand { font-size: 23px; padding-bottom: 20px; margin-bottom: 8px; border-bottom: 1px solid var(--hairline); }

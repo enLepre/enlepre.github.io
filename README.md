@@ -16,6 +16,7 @@ Run `pnpm test` and `pnpm run build` before publishing. `pnpm run preview` previ
 - `src/content/pages/home.md`: Home title, separate `menuTitle`, image, footer, and hierarchy.
 - `src/content/research/*.md`: research entries.
 - `src/content/notes/*.md`: all notes and longer pieces, with optional `status`.
+- `src/content/tools/*.md`: tool descriptions and links.
 - `src/content/sections/*.md`: section titles and introductions; `about.md` also contains the biography and contact text.
 
 Every page Markdown file requires a positive integer `level` in its YAML frontmatter. Use `level: 1` for Home, `level: 2` for sections, and `level: 3` for articles. A larger destination level slides upward; a smaller destination level slides downward, including when using browser history. Equal levels retain the router’s normal direction. Change these numbers to customize hierarchy; URLs do not determine the animation.

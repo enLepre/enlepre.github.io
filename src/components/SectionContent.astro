@@ -6,7 +6,11 @@ import Publications from './Publications.astro';
 const { section, previewOnly = false, hideLead = false } = Astro.props;
 const intro = await getEntry('sections', section);
 if (!intro) throw new Error(`Missing section: ${section}`);
-const entries = ['about', 'publications'].includes(section) ? [] : newestFirst(await getCollection(section));
+const entries = section === 'tools'
+  ? (await getCollection('tools')).sort((a, b) => a.id.localeCompare(b.id))
+  : section === 'research' || section === 'notes'
+    ? newestFirst(await getCollection(section))
+    : [];
 const Intro = !previewOnly ? (await render(intro)).Content : null;
 ---
 {!hideLead && intro.data.lead && <p class="lead">{intro.data.lead}</p>}
@@ -15,4 +19,4 @@ const Intro = !previewOnly ? (await render(intro)).Content : null;
   <ul class="note-list">
     {entries.map(entry => <li data-date={entry.data.date.toISOString()}><div><a href={articleHref(section, entry.id, import.meta.env.BASE_URL)}>{entry.data.title}</a>{entry.data.preview && <div class="prose"><p>{entry.data.preview}</p></div>}</div><span>{entry.data.status}</span></li>)}
   </ul>
-) : entries.map(entry => <section class="item" data-date={entry.data.date.toISOString()}><h2><a href={articleHref(section, entry.id, import.meta.env.BASE_URL)}>{entry.data.title}</a></h2>{entry.data.preview && <div class="prose"><p>{entry.data.preview}</p></div>}</section>)}
+) : entries.map(entry => <section class="item" data-date={entry.collection !== "tools" ? entry.data.date.toISOString() : undefined}><h2><a href={articleHref(section, entry.id, import.meta.env.BASE_URL)}>{entry.data.title}</a></h2>{entry.data.preview && <div class="prose"><p>{entry.data.preview}</p></div>}</section>)}

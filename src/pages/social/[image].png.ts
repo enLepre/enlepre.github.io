@@ -6,7 +6,7 @@ import { renderSocialPreview } from '../../lib/render-social-preview.mjs';
 export async function getStaticPaths() {
   const collections = await Promise.all([
     getCollection('pages'), getCollection('sections'),
-    getCollection('notes'), getCollection('research'),
+    getCollection('notes'), getCollection('research'), getCollection('tools'),
   ]);
   const images = new Map(collections.flat().map(entry => {
     const text = entry.collection === 'sections' && entry.id === 'about'
