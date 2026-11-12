@@ -28,7 +28,7 @@ In my free time, I like to play music, hike, and think about abstract concepts.
 
 ## Contacts
 
-enrico.lepre@chem.uzh.ch
+<a href="https://www.chem.uzh.ch/static/general/Filemaker/Seite3_tilley.php?i=1493" data-email-redirect="">Email me (UZH)</a>
 
 [LinkedIn](https://www.linkedin.com/in/enrico-lepre-42178bb3/)
 
