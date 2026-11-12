@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "orcid": "0000-0003-4252-3056",
-  "updatedAt": "2026-11-09T16:16:56.006Z",
+  "updatedAt": "2026-11-12T08:51:55.297Z",
   "publications": [
     {
       "id": "171096670",
@@ -37,7 +37,7 @@
       "type": "journal-article"
     },
     {
-      "id": "147448463",
+      "id": "147448462",
       "title": "Oxygen-Rich Carbon Nitrides from an Eutectic Template Strategy Stabilize Ni, Fe Nanosites for Electrocatalytic Oxygen Evolution",
       "authors": "Li, C., Lepre, E., Bi, M., Antonietti, M., Zhu, J., Fu, Y., López-Salas, N.",
       "journal": "Advanced Science",
