@@ -15,7 +15,21 @@ test('menu opens only on activation and supports dismissal and client navigation
   menu.classList = { toggle(name, enabled) { enabled ? menu.classes.add(name) : menu.classes.delete(name); }, contains(name) { return menu.classes.has(name); } };
   menu.querySelector = selector => selector === 'nav' ? nav : toggle;
   const document = { activeElement: null, events: {}, querySelector: () => menu, addEventListener(name, handler) { this.events[name] = handler; } };
-  vm.runInNewContext(readFileSync('src/scripts/navigation.js', 'utf8'), { document, AbortController });
+  const window = { location: new URL('https://example.com/notes.html') };
+  vm.runInNewContext(readFileSync('src/scripts/navigation.js', 'utf8'), { document, window, URL, AbortController });
+  const clickLink = (href, options = {}) => {
+    toggle.events.click();
+    let prevented = false;
+    nav.events.click({ button: 0, target: { closest: () => ({ href }) }, preventDefault() { prevented = true; }, ...options });
+    assert.equal(nav.inert, true);
+    return prevented;
+  };
+  assert.equal(clickLink('https://example.com/notes.html'), true);
+  assert.equal(document.activeElement, toggle);
+  assert.equal(clickLink('https://example.com/tools.html'), false);
+  assert.equal(clickLink('https://example.com/notes.html', { ctrlKey: true }), false);
+  window.location = new URL('https://example.com/index.html');
+  assert.equal(clickLink('https://example.com/'), true);
   // Focus alone must not reveal the links; click/tap or keyboard activation does.
   toggle.focus();
   assert.equal(menu.classes.has('is-open'), false);

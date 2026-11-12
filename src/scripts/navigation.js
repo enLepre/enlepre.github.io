@@ -24,7 +24,19 @@ function initializeMenu() {
     if (!menu.contains(event.target)) setOpen(false);
   }, { signal: controller.signal });
   nav.addEventListener('click', (event) => {
-    if (event.target.closest('a')) setOpen(false);
+    const link = event.target.closest('a[href]');
+    if (!link) return;
+    if (!event.defaultPrevented && event.button === 0 &&
+        !event.metaKey && !event.ctrlKey && !event.shiftKey && !event.altKey) {
+      const destination = new URL(link.href);
+      const current = window.location;
+      const pagePath = (url) => url.pathname.replace(/\/index\.html$/, '/');
+      if (destination.origin === current.origin && pagePath(destination) === pagePath(current)) {
+        event.preventDefault();
+        toggle.focus();
+      }
+    }
+    setOpen(false);
   });
 }
 let controller = new AbortController();
