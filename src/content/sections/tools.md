@@ -2,5 +2,5 @@
 title: Tools
 level: 2
 reading: false
-lead: "A collection of tools I have designed to solve problems I encountered."
+lead: "Tools I’ve built to solve problems I’ve run into."
 ---
