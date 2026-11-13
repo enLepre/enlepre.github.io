@@ -1,5 +1,5 @@
 ---
-import { getCollection, getEntry, render } from 'astro:content';
+import { getCollection, render } from 'astro:content';
 import Layout from '../../layouts/Layout.astro';
 import Publications from '../../components/Publications.astro';
 import { articleHref } from '../../lib/urls.mjs';
@@ -20,8 +20,6 @@ export async function getStaticPaths() {
 const { entry, section, legacy } = Astro.props;
 if (legacy) return Astro.redirect(articleHref(section, entry.id, import.meta.env.BASE_URL), 301);
 const { Content } = await render(entry);
-const parent = await getEntry('sections', section);
-const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 const noteDate = entry.collection === 'notes' ? entry.data.date : undefined;
 const [dateStart, dateSuffix, dateEnd] = noteDate
   ? formatNoteDate(noteDate).split(/(st|nd|rd|th)(?=,)/)
@@ -29,7 +27,6 @@ const [dateStart, dateSuffix, dateEnd] = noteDate
 ---
 <Layout section={section} title={entry.data.title} subtitle={previewText(entry.data).subtitle} level={entry.data.level} reading={entry.data.reading}>
   <main class="page article-page">
-    <a class="back-link" href={`${base}/${section}.html`}>↑ {parent?.data.title || section}</a>
     <article>
       <h1 class="page-title">{entry.data.title}</h1>
       <div class="prose"><Content /></div>
