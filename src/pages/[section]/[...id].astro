@@ -18,6 +18,7 @@ export async function getStaticPaths() {
   return routes.flat();
 }
 const { entry, section, legacy } = Astro.props;
+if (entry.collection === 'tools') return Astro.redirect(entry.data.url, 301);
 if (legacy) return Astro.redirect(articleHref(section, entry.id, import.meta.env.BASE_URL), 301);
 const { Content } = await render(entry);
 const noteDate = entry.collection === 'notes' ? entry.data.date : undefined;

@@ -12,7 +12,7 @@ export const collections = {
   research: dated('research'), notes: dated('notes'),
   tools: defineCollection({
     loader: glob({ pattern: ['*.md', '!template.md'], base: './src/content/tools' }),
-    schema: z.object({ title: z.string(), level: z.number().int().positive(), reading: z.boolean().default(true), preview: z.string().trim().default('') })
+    schema: z.object({ title: z.string(), url: z.string().url(), level: z.number().int().positive(), reading: z.boolean().default(true), preview: z.string().trim().default('') })
   }),
   sections: defineCollection({
     loader: glob({ pattern: ['*.md', '!template.md'], base: './src/content/sections' }),
