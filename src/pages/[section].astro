@@ -1,0 +1,25 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { getEntry } from 'astro:content';
+import SectionContent from '../components/SectionContent.astro';
+import OptimizedImage from '../components/OptimizedImage.astro';
+import { previewText } from '../lib/social-preview.mjs';
+export function getStaticPaths() {
+  return ['research', 'publications', 'notes', 'tools', 'about'].map(section => ({ params: { section } }));
+}
+const { section } = Astro.params;
+const entry = await getEntry('sections', section!);
+if (!entry) throw new Error(`Missing section Markdown: ${section}`);
+---
+<Layout section={section} title={entry.data.title} subtitle={previewText(entry.data).subtitle} level={entry.data.level} reading={entry.data.reading}>
+  <main class="page">
+    <div class:list={{ 'section-heading': true, 'has-portrait': Boolean(entry.data.portrait) }}>
+      <div>
+        <h1 class="page-title">{entry.data.title}</h1>
+        {entry.data.portrait && entry.data.lead && <p class="lead">{entry.data.lead}</p>}
+      </div>
+      {entry.data.portrait && <OptimizedImage class="section-portrait" src={entry.data.portrait} alt={entry.data.portraitAlt} widths={[200, 400, 600]} sizes="(max-width: 380px) 96px, (max-width: 600px) 112px, 200px" />}
+    </div>
+    <div class="page-content"><SectionContent section={section} hideLead={Boolean(entry.data.portrait)} /></div>
+  </main>
+</Layout>

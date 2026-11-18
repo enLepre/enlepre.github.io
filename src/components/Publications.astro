@@ -1,0 +1,101 @@
+---
+import config from '../data/publication-sync.json';
+import cache from '../data/publications.json';
+if (cache.orcid !== config.orcid) throw new Error('Publication cache does not match the configured ORCID');
+const publications = cache.publications;
+const years = [...new Set(publications.map(paper => paper.year).filter(Boolean))].sort().reverse();
+---
+<div class="publications">
+  {publications.length ? <>
+    <form class="publication-filters" role="search" aria-label="Search publications" hidden>
+      <div class="publication-search">
+        <label for="publication-query">Search publications</label>
+        <input id="publication-query" type="search" placeholder="Title, keyword, author, or year" autocomplete="off" />
+      </div>
+      <div>
+        <label for="publication-year">Year</label>
+        <select id="publication-year"><option value="">All years</option>{years.map(year => <option value={year}>{year}</option>)}</select>
+      </div>
+      <button type="reset">Clear filters</button>
+      <p class="publication-count" role="status" aria-live="polite" aria-atomic="true"></p>
+    </form>
+    <ol class="publication-list">
+      {publications.map(paper => <li class="publication" data-year={paper.year}>
+        <time>{paper.year || 'n.d.'}</time>
+        <div class="publication-details">
+          <h2><a href={paper.url} target="_blank" rel="noopener noreferrer">{paper.title}</a></h2>
+          {paper.authors && <p class="publication-authors">{paper.authors}</p>}
+          {paper.journal && <p>{paper.journal}</p>}
+          {paper.doi && <a class="publication-doi" href={paper.url} target="_blank" rel="noopener noreferrer">doi.org/{paper.doi} ↗</a>}
+        </div>
+      </li>)}
+    </ol>
+    <p class="publication-empty" hidden>No publications match your search. Try another keyword or year.</p>
+  </> : <p>No public works are currently listed on my ORCID record.</p>}
+</div>
+<script>
+  const normalize = (value: string) => value.normalize('NFD').replace(/\p{Diacritic}/gu, '').toLowerCase();
+  function initializePublications() {
+  for (const root of document.querySelectorAll<HTMLElement>('.publications')) {
+    if (root.dataset.ready) continue;
+    root.dataset.ready = 'true';
+    const form = root.querySelector<HTMLFormElement>('.publication-filters');
+    const query = root.querySelector<HTMLInputElement>('input[type="search"]');
+    const year = root.querySelector<HTMLSelectElement>('select');
+    const clear = root.querySelector<HTMLButtonElement>('button[type="reset"]');
+    const count = root.querySelector<HTMLElement>('.publication-count');
+    const empty = root.querySelector<HTMLElement>('.publication-empty');
+    if (!form || !query || !year || !clear || !count || !empty) continue;
+    const papers = [...root.querySelectorAll<HTMLElement>('.publication')].map(element => ({ element, text: normalize(element.textContent || '') }));
+    const update = () => {
+      const terms = normalize(query.value).trim().split(/\s+/).filter(Boolean);
+      let visible = 0;
+      for (const paper of papers) {
+        paper.element.hidden = !(terms.every(term => paper.text.includes(term)) && (!year.value || paper.element.dataset.year === year.value));
+        if (!paper.element.hidden) visible++;
+      }
+      count.textContent = visible + ' of ' + papers.length + ' publications';
+      empty.hidden = visible > 0;
+      clear.disabled = !query.value && !year.value;
+    };
+    form.addEventListener('submit', event => event.preventDefault());
+    query.addEventListener('input', update);
+    year.addEventListener('change', update);
+    form.addEventListener('reset', event => {
+      event.preventDefault();
+      query.value = '';
+      year.value = '';
+      update();
+      query.focus();
+    });
+    form.hidden = false;
+    update();
+  }
+  }
+  document.addEventListener('astro:page-load', initializePublications);
+  initializePublications();
+</script>
+<style>
+  .publication-filters { display: grid; grid-template-columns: minmax(0, 1fr) 130px auto; gap: 12px 16px; align-items: end; margin: 0 0 12px; }
+  .publication-filters label { display: block; font-size: 14px; margin-bottom: 7px; }
+  .publication-filters input, .publication-filters select, .publication-filters button { min-height: 44px; padding: 10px 12px; border: 1px solid var(--control-border); border-radius: 5px; background: var(--paper); color: var(--ink); font: inherit; font-size: 16px; }
+  .publication-filters input, .publication-filters select { width: 100%; min-width: 0; }
+  .publication-filters button { cursor: pointer; font-size: 14px; }
+  .publication-filters button:disabled { opacity: .45; cursor: default; }
+  .publication-filters :is(input, select, button):focus-visible { outline: 2px solid var(--link); outline-offset: 3px; }
+  .publication-count { grid-column: 1 / -1; font-size: 13px; color: var(--muted); margin: 0; }
+  .publication-list { list-style: none; padding: 0; margin: 0; }
+  .publication { display: grid; grid-template-columns: 48px minmax(0, 1fr); gap: 20px; padding: 20px 0; }
+  .publication time { font-size: 14px; color: var(--muted); line-height: 1.5; }
+  .publication h2 { font-size: 18px; font-weight: 400; line-height: 1.5; margin: 0 0 6px; }
+  .publication p { font-size: 14px; color: var(--muted); line-height: 1.6; margin: 0 0 5px; }
+  .publication .publication-authors { font-size: 13px; }
+  .publication-doi { color: var(--link); font-size: 13px; line-height: 1.6; overflow-wrap: anywhere; }
+  .publication-empty { color: var(--muted); font-size: 14px; margin: 28px 0; }
+  .publication[hidden], .publication-filters[hidden], .publication-empty[hidden] { display: none; }
+  @media (max-width: 600px) {
+    .publication-filters { grid-template-columns: minmax(0, 1fr) auto; }
+    .publication-search { grid-column: 1 / -1; }
+    .publication { grid-template-columns: 36px minmax(0, 1fr); gap: 12px; }
+  }
+</style>

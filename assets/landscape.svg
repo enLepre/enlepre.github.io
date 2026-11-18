@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 780 390" role="img" aria-labelledby="title desc">
+<title id="title">Mountain landscape</title>
+<desc id="desc">A sparse black line drawing of a mountain landscape on white.</desc>
+<rect width="780" height="390" fill="#fff"/>
+<g fill="none" stroke="#111" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+  <path d="M77 281 C151 259 193 218 250 165 C273 144 293 153 315 174 C345 204 363 216 392 192 C433 157 458 109 503 101 C536 95 553 132 575 161 C609 204 647 232 707 254"/>
+  <path d="M78 281 C166 288 239 302 302 320 C360 336 417 346 473 340 C546 333 606 309 665 278"/>
+  <path d="M244 171 l19 10 15-7 24 20 18-5 25 20"/>
+  <path d="M485 108 l19 18 17-7 19 23 17-6 28 29"/>
+  <path d="M117 281 C201 267 267 276 326 295 C393 316 451 323 514 310 C568 299 615 280 681 256"/>
+  <path d="M305 320 C340 334 364 351 378 374"/>
+  <path d="M378 374 C398 352 420 337 461 325"/>
+</g>
+<text x="500" y="362" font-family="Georgia,serif" font-size="17" fill="#777" font-style="italic">notes from the edge of what I know</text>
+</svg>

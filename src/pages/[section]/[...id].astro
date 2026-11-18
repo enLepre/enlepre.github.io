@@ -1,0 +1,63 @@
+---
+import { getCollection, render } from 'astro:content';
+import Layout from '../../layouts/Layout.astro';
+import Publications from '../../components/Publications.astro';
+import { articleHref } from '../../lib/urls.mjs';
+import { formatNoteDate } from '../../lib/dates.mjs';
+import { previewText } from '../../lib/social-preview.mjs';
+export async function getStaticPaths() {
+  const sections = ['research', 'notes', 'tools'] as const;
+  const routes = await Promise.all(sections.map(async section =>
+    (await getCollection(section)).flatMap(entry => [
+      { params: { section, id: entry.id }, props: { entry, section, legacy: false } },
+      ...(entry.collection !== 'tools' && entry.data.legacySlug && entry.data.legacySlug !== entry.id ? [
+        { params: { section, id: entry.data.legacySlug }, props: { entry, section, legacy: true } }
+      ] : [])
+    ])
+  ));
+  return routes.flat();
+}
+const { entry, section, legacy } = Astro.props;
+if (legacy) return Astro.redirect(articleHref(section, entry.id, import.meta.env.BASE_URL), 301);
+const { Content } = await render(entry);
+const noteDate = entry.collection === 'notes' ? entry.data.date : undefined;
+const [dateStart, dateSuffix, dateEnd] = noteDate
+  ? formatNoteDate(noteDate).split(/(st|nd|rd|th)(?=,)/)
+  : [];
+---
+<Layout section={section} title={entry.data.title} subtitle={previewText(entry.data).subtitle} level={entry.data.level} reading={entry.data.reading}>
+  <main class="page article-page">
+    <article>
+      <h1 class="page-title">{entry.data.title}</h1>
+      <div class="prose"><Content /></div>
+      {entry.collection !== 'tools' && entry.data.publications && <Publications />}
+      {noteDate && (
+        <footer class="note-signature">
+          <span>Enrico L.</span>
+          <time datetime={noteDate.toISOString().slice(0, 10)}>{dateStart}<sup>{dateSuffix}</sup>{dateEnd}</time>
+        </footer>
+      )}
+    </article>
+  </main>
+</Layout>
+
+<style>
+  .note-signature {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    width: fit-content;
+    max-width: 92%;
+    margin: 2.5rem 8% 0 auto;
+    color: var(--muted);
+    font-size: 17px;
+    font-style: italic;
+    line-height: 1.75;
+    text-align: left;
+  }
+  .note-signature sup {
+    font-size: 0.7em;
+    line-height: 0;
+    vertical-align: super;
+  }
+</style>

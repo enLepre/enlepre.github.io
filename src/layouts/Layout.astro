@@ -1,0 +1,93 @@
+---
+import '../styles/global.css';
+import themeScript from '../scripts/theme.js?raw';
+import LandscapeFilter from '../components/LandscapeFilter.astro';
+import { getEntry, getCollection } from 'astro:content';
+import { ClientRouter } from 'astro:transitions';
+import { previewMetadata, aboutPreview } from '../lib/social-preview.mjs';
+const fade = {
+  old: { name: 'page-fade-out', duration: '300ms', easing: 'ease-in-out', fillMode: 'both' },
+  new: { name: 'page-fade-in', duration: '340ms', easing: 'ease-in-out', fillMode: 'both' }
+};
+const pageTransition = { forwards: fade, backwards: fade };
+const { section = 'home', title, subtitle, level, reading = false } = Astro.props;
+const homeEntry = await getEntry('pages', 'home');
+if (!homeEntry) throw new Error('Missing pages/home.md');
+const sections = await getCollection('sections');
+const sectionTitle = (id: string) => sections.find(entry => entry.id === id)?.data.title || id;
+const home = section === 'home';
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+const social = previewMetadata(
+  home || (section === 'about' && level === 2)
+    ? aboutPreview(sections.find(entry => entry.id === 'about')!.data)
+    : { title: title || sectionTitle(section), subtitle },
+  Astro.url.pathname, Astro.site!, base,
+);
+const menuItems = ['research', 'publications', 'notes', 'tools', 'about'].map(id => ({
+  id,
+  label: sectionTitle(id),
+  href: `${base}/${id}.html`,
+}));
+---
+<!doctype html>
+<html lang="en" transition:name="root" transition:animate={pageTransition}>
+<head>
+  <ClientRouter />
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta name="color-scheme" content="light dark" />
+  <script is:inline set:html={themeScript}></script>
+  <meta name="generator" content={Astro.generator} />
+  <link rel="icon" href={`${base}/favicon.ico`} sizes="32x32" />
+  <link rel="icon" type="image/svg+xml" href={`${base}/favicon.svg`} sizes="any" />
+  <link rel="apple-touch-icon" href={`${base}/apple-touch-icon.png`} sizes="180x180" />
+  <title>{home ? `${homeEntry.data.menuTitle} - ${homeEntry.data.title}` : `${title || sectionTitle(section)} — ${homeEntry.data.title}`}</title>
+  <meta name="description" content={social.subtitle || 'Research and notes by Enrico Lepre.'} />
+  <link rel="canonical" href={social.url} />
+  <meta property="og:type" content={level === 3 ? 'article' : 'website'} />
+  <meta property="og:site_name" content={homeEntry.data.menuTitle} />
+  <meta property="og:title" content={social.title} />
+  {social.subtitle && <meta property="og:description" content={social.subtitle} />}
+  <meta property="og:url" content={social.url} />
+  <meta property="og:image" content={social.image} />
+  <meta property="og:image:type" content="image/png" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:image:alt" content={social.alt} />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content={social.title} />
+  {social.subtitle && <meta name="twitter:description" content={social.subtitle} />}
+  <meta name="twitter:image" content={social.image} />
+  <meta name="twitter:image:alt" content={social.alt} />
+</head>
+<body id="top" data-page={section} data-page-level={level} data-reading={String(reading)}>
+  <LandscapeFilter />
+  <header class="site-header shell" transition:name="site-menu" transition:animate="none">
+    <div class="menu">
+      <svg class="menu-outline" aria-hidden="true" focusable="false">
+        <rect width="100%" height="100%" vector-effect="non-scaling-stroke" />
+      </svg>
+      <button class="menu-toggle" aria-expanded="false" aria-controls="main-menu" aria-label="Open navigation"><span aria-hidden="true"></span></button>
+      <nav id="main-menu" aria-label="Main navigation" inert>
+        <a class="brand" href={`${base}/`} data-nav="home">{homeEntry.data.menuTitle}</a>
+        {menuItems.map(({ id, label, href }) => {
+          const active = !home && id === section;
+          return <a href={href} data-nav={id} class:list={{ 'is-active': active }} aria-current={active ? 'page' : undefined}>{label}</a>;
+        })}
+        <button id="theme-toggle" class="theme-toggle" type="button" aria-label="Switch to dark mode">
+          <svg class="theme-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" aria-hidden="true">
+            <circle cx="12" cy="12" r="4" />
+            <path d="M12 2v2m0 16v2M2 12h2m16 0h2M4.93 4.93l1.42 1.42m11.3 11.3 1.42 1.42M4.93 19.07l1.42-1.42m11.3-11.3 1.42-1.42" />
+          </svg>
+          <svg class="theme-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M20.9 13.1A9 9 0 0 1 10.9 3.1a9 9 0 1 0 10 10Z" />
+          </svg>
+        </button>
+      </nav>
+    </div>
+  </header>
+  <div class="page-stage"><slot /></div>
+  {!home && <footer class="site-footer" transition:name="site-footer" transition:animate="none">{homeEntry.data.footer}</footer>}
+  <script>import '../scripts/navigation.js'; import '../scripts/external-links.js';</script>
+</body>
+</html>

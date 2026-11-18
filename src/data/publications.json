@@ -1,0 +1,106 @@
+{
+  "schemaVersion": 1,
+  "orcid": "0000-0003-4252-3056",
+  "updatedAt": "2026-11-16T09:41:08.792Z",
+  "publications": [
+    {
+      "id": "171096670",
+      "title": "Fibrillated Films for Suspension Catalyst Immobilization—A Kinetic Study of the Nitrobenzene Hydrogenation",
+      "authors": "Chiara Boscagli, Enrico Lepre, Oliver Hofmann, Lukas Wengeler, Marcel Schmitt, Ivana Jevtovikj, Carlos Lizandara-Pueyo, Stephan A. Schunk",
+      "journal": "Materials",
+      "year": "2024",
+      "date": "2024-11-06",
+      "doi": "10.3390/ma17225411",
+      "url": "https://doi.org/10.3390/ma17225411",
+      "type": "journal-article"
+    },
+    {
+      "id": "147448465",
+      "title": "Catalytic Properties of High Nitrogen Content Carbonaceous Materials",
+      "authors": "Lepre, E., Rat, S., Cavedon, C., Seeberger, P.H., Pieber, B., Antonietti, M., López-Salas, N.",
+      "journal": "Angewandte Chemie - International Edition",
+      "year": "2023",
+      "date": "2023-00-00",
+      "doi": "10.1002/anie.202211663",
+      "url": "https://doi.org/10.1002/anie.202211663",
+      "type": "journal-article"
+    },
+    {
+      "id": "147448467",
+      "title": "Efficient ethanol electro-reforming on bimetallic anodes supported on adenine-based noble carbons: hydrogen production and value-added chemicals",
+      "authors": "Rodríguez-Gómez, A., Lepre, E., Dorado, F., Sanchez-Silva, L., Lopez-Salas, N., de la Osa, A.R.",
+      "journal": "Materials Today Energy",
+      "year": "2023",
+      "date": "2023-00-00",
+      "doi": "10.1016/j.mtener.2022.101231",
+      "url": "https://doi.org/10.1016/j.mtener.2022.101231",
+      "type": "journal-article"
+    },
+    {
+      "id": "147448463",
+      "title": "Oxygen-Rich Carbon Nitrides from an Eutectic Template Strategy Stabilize Ni, Fe Nanosites for Electrocatalytic Oxygen Evolution",
+      "authors": "Li, C., Lepre, E., Bi, M., Antonietti, M., Zhu, J., Fu, Y., López-Salas, N.",
+      "journal": "Advanced Science",
+      "year": "2023",
+      "date": "2023-00-00",
+      "doi": "10.1002/advs.202300526",
+      "url": "https://doi.org/10.1002/advs.202300526",
+      "type": "journal-article"
+    },
+    {
+      "id": "147448468",
+      "title": "Template-induced graphitic nanodomains in nitrogen-doped carbons enable high-performance sodium-ion capacitors",
+      "authors": "Li, C., Song, Z., Liu, M., Lepre, E., Antonietti, M., Zhu, J., Liu, J., Fu, Y., López-Salas, N.",
+      "journal": "ChemRxiv",
+      "year": "2023",
+      "date": "2023-00-00",
+      "doi": "10.26434/chemrxiv-2023-n1kr5",
+      "url": "https://doi.org/10.26434/chemrxiv-2023-n1kr5",
+      "type": "other"
+    },
+    {
+      "id": "147448349",
+      "title": "PtRu nanoparticles supported on noble carbons for ethanol electrooxidation",
+      "authors": "Alberto Rodríguez-Gómez, Enrico Lepre, Luz Sánchez-Silva, Nieves López-Salas, Ana Raquel de la Osa",
+      "journal": "Journal of Energy Chemistry",
+      "year": "2022",
+      "date": "2022-03-00",
+      "doi": "10.1016/j.jechem.2021.07.004",
+      "url": "https://doi.org/10.1016/j.jechem.2021.07.004",
+      "type": "journal-article"
+    },
+    {
+      "id": "147448470",
+      "title": "Ni-based electrocatalysts for unconventional CO2 reduction reaction to formic acid",
+      "authors": "Lepre, E., Heske, J., Nowakowski, M., Scoppola, E., Zizak, I., Heil, T., Kühne, T.D., Antonietti, M., López-Salas, N., Albero, J.",
+      "journal": "Nano Energy",
+      "year": "2022",
+      "date": "2022-00-00",
+      "doi": "10.1016/j.nanoen.2022.107191",
+      "url": "https://doi.org/10.1016/j.nanoen.2022.107191",
+      "type": "journal-article"
+    },
+    {
+      "id": "95563921",
+      "title": "Caffeine-Derived Noble Carbons as Ball Milling-Resistant Cathode Materials for Lithium-Ion Capacitors",
+      "authors": "Ivan K. Ilic, Enrico Lepre, Nieves López-Salas",
+      "journal": "ACS Applied Materials & Interfaces",
+      "year": "2021",
+      "date": "2021-06-30",
+      "doi": "10.1021/acsami.1c06013",
+      "url": "https://doi.org/10.1021/acsami.1c06013",
+      "type": "journal-article"
+    },
+    {
+      "id": "147448395",
+      "title": "Laser-carbonization: Peering into the formation of micro-thermally produced (N-doped)carbons",
+      "authors": "Huize Wang, Simon Delacroix, Oliver Osswald, Mackenzie Anderson, Tobias Heil, Enrico Lepre, Nieves Lopez-Salas, Richard B. Kaner, Bernd Smarsly, Volker Strauss",
+      "journal": "Carbon",
+      "year": "2021",
+      "date": "2021-05-00",
+      "doi": "10.1016/j.carbon.2021.01.145",
+      "url": "https://doi.org/10.1016/j.carbon.2021.01.145",
+      "type": "journal-article"
+    }
+  ]
+}

@@ -1,0 +1,65 @@
+---
+import '@fontsource/libre-baskerville/latin-400-italic.css';
+import { getEntry } from 'astro:content';
+import Layout from '../layouts/Layout.astro';
+import OptimizedImage from '../components/OptimizedImage.astro';
+
+const home = await getEntry('pages', 'home');
+if (!home) throw new Error('Missing pages/home.md');
+---
+<Layout level={home.data.level}>
+  <main class="home">
+    <div class="home-heading">
+      <p class="home-name">{home.data.menuTitle}</p>
+      <h1>{home.data.title}</h1>
+    </div>
+    <OptimizedImage class="landscape" src={home.data.image} alt={home.data.imageAlt} fetchpriority="high" loading="eager" />
+  </main>
+</Layout>
+
+<style>
+  :global(body[data-page="home"]) {
+    padding: 0;
+  }
+
+  .home {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: clamp(10px, 2.5svh, 24px);
+    height: 100svh;
+    padding: clamp(16px, 8svh, 64px) 18px;
+    text-align: center;
+  }
+
+  .home-heading {
+    flex: none;
+  }
+
+  .home-name {
+    margin: 0 0 clamp(6px, 1.5svh, 14px);
+    font-family: "Libre Baskerville", Georgia, serif;
+    font-size: clamp(20px, 3vw, 32px);
+    font-style: italic;
+    line-height: 1.2;
+  }
+
+  h1 {
+    max-width: 860px;
+    margin: 0;
+    font-size: min(clamp(32px, 9vw, 104px), 22svh);
+    font-weight: 400;
+    line-height: .95;
+    letter-spacing: -.055em;
+  }
+
+  .landscape {
+    min-height: 0;
+    width: min(560px, 100%);
+    height: auto;
+    max-height: 48svh;
+    margin: 0;
+    object-fit: contain;
+  }
+</style>

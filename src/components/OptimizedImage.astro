@@ -1,0 +1,11 @@
+---
+import { Image } from 'astro:assets';
+import type { ImageMetadata } from 'astro';
+const { src, alt, widths = [400, 800, 1120, 1575], sizes = '(max-width: 600px) calc(100vw - 36px), 560px', ...attributes } = Astro.props;
+// Keep Markdown image paths editable, and optimize matching local assets at build time.
+const assets = import.meta.glob<{ default: ImageMetadata }>('../../public/assets/*.{png,jpg,jpeg,webp}', { eager: true });
+const path = src.split(/[?#]/)[0];
+const asset = assets[`../../public${path}`]?.default;
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+---
+{asset ? <Image src={asset} alt={alt} widths={widths.filter((width: number) => width <= asset.width)} sizes={sizes} format="webp" quality={85} {...attributes} /> : <img src={`${base}${src}`} alt={alt} {...attributes} />}

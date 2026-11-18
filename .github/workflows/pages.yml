@@ -1,0 +1,71 @@
+name: Deploy Astro to GitHub Pages
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+  schedule:
+    - cron: '17 6 * * 1'
+permissions:
+  contents: write
+  actions: read
+  pages: write
+  id-token: write
+concurrency:
+  group: pages
+  cancel-in-progress: false
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 11.19.0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm sync:publications
+      - run: pnpm test
+      - run: pnpm run build
+      - name: Save refreshed publications
+        run: |
+          git add src/data/publications.json
+          if ! git diff --cached --quiet; then
+            git config user.name "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git commit -m "Refresh publications from ORCID"
+            git push origin HEAD:main
+          fi
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      # The repository also has a legacy branch-based Pages build. Wait for it
+      # so it cannot overwrite the Astro artifact with unbuilt source files.
+      - name: Wait for legacy Pages deployment
+        uses: actions/github-script@v7
+        with:
+          script: |
+            for (let attempt = 0; attempt < 60; attempt++) {
+              const { data } = await github.rest.actions.listWorkflowRunsForRepo({
+                ...context.repo, head_sha: context.sha, per_page: 100
+              });
+              const legacy = data.workflow_runs.filter(run =>
+                run.path === 'dynamic/pages/pages-build-deployment'
+              );
+              if (legacy.every(run => run.status === 'completed')) return;
+              await new Promise(resolve => setTimeout(resolve, 5000));
+            }
+            throw new Error('Legacy Pages deployment is still running. Retry this deployment once it finishes.');
+      - name: Deploy
+        id: deployment
+        uses: actions/deploy-pages@v4
